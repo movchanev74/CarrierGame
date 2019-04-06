@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
 	public  Vector3 ofset;
 	public GameObject target;
+	Tween moveTween;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +17,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		transform.position = target.transform.position - ofset;
+		//moveTween.
+		transform.DOMove(target.transform.position - ofset, 0.01f); 
     }
 }

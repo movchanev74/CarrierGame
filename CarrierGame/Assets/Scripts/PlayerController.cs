@@ -9,10 +9,12 @@ public class PlayerController : MonoBehaviour
 	public float speedRotate;
 	public GameObject curBox;
 	public GameObject boxInHands;
+	Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
-        
+		rb = gameObject.GetComponent<Rigidbody> ();
+		rb.centerOfMass = new Vector3(0,0,0);
     }
 
 	void TakeBox(){
@@ -48,7 +50,8 @@ public class PlayerController : MonoBehaviour
 
 		float rotationY = transform.localEulerAngles.y*Mathf.Deg2Rad;
 		Vector3 force = new Vector3 (Mathf.Sin(rotationY), 0, Mathf.Cos(rotationY))*vertical*speedMove*Time.deltaTime;  
-		transform.GetComponent<Rigidbody> ().AddForceAtPosition(force,transform.position);  
+		transform.GetComponent<Rigidbody> ().AddForceAtPosition(force,transform.position+0.2f*Vector3.down,ForceMode.Acceleration);
+		rb.
 		transform.Rotate(new Vector3(0,horizontal*speedRotate*Time.deltaTime,0),Space.Self);
 
 		if (Input.GetKeyDown (KeyCode.Space) && boxInHands)
