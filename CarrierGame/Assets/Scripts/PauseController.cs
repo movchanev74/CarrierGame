@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.PostProcessing;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class PauseController : MonoBehaviour
 		for (int i = 0; i < PauseButtons.transform.childCount; i++) {
 			var button = PauseButtons.transform.GetChild (i);
 			button.GetComponent<Button> ().interactable = true;
-			show = button.DOMove (button.transform.position + Vector3.right*offset,offsetDuration);
+			show = button.DOMove (button.transform.position + Vector3.right*Mathf.Abs(offset),offsetDuration);
 		}
 		show.OnComplete (delegate() {
 			Time.timeScale = 0;
@@ -42,7 +43,7 @@ public class PauseController : MonoBehaviour
 		//for (int i = 0; i < PauseButtons.transform.childCount; i++) {
 			var button = PauseButtons.transform.GetChild (i);
 			button.GetComponent<Button> ().interactable = false;
-			seq.Append (button.DOMove (button.transform.position - Vector3.right*offset,offsetDuration));
+			seq.Append (button.DOMove (button.transform.position - Vector3.right*Mathf.Abs(offset),offsetDuration));
 		}
 	}
 
@@ -53,15 +54,22 @@ public class PauseController : MonoBehaviour
     }
 		
     public void Play(){
-		
 		HidePauseButtons (offsetDuration);
     }
 
 	public void Save(){
+		
+	}
+
+	public void Restart(){
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 	}
 
 	public void Load(){
+		
 	}
+
 	public void Exit(){
+		SceneManager.LoadScene ("MainMenu");
 	}
 }

@@ -5,16 +5,21 @@ using DG.Tweening;
 
 abstract public class ParentMovablePlatform : MonoBehaviour
 {
-	public Vector3[] pathMove;
-	public float durationMove;
-	public float durationRotation;
-	TweenParams LoopParams;
-	protected void Start(){
-		LoopParams = new TweenParams ().SetLoops (-1).SetEase(Ease.Linear);
-	}
+	protected GameObject pathMove;
+	protected float durationMove;
+	protected Vector4[] pathTimeRotation;
+	protected float durationRotation;
 
 	protected void RotatePlatform(){
-		transform.DORotate (new Vector3 (0, 0, 0), durationRotation).SetLoops(-1);
+		Sequence seq = DOTween.Sequence ();
+		for (int i = 0; i < pathTimeRotation.Length; i++) {
+			seq.Append (transform.DORotate (new Vector3 (pathTimeRotation[i].x, pathTimeRotation[i].y, pathTimeRotation[i].z), pathTimeRotation[i].w).SetEase (Ease.InOutCubic));
+		}
+		seq.Append (transform.DORotate (gameObject.transform.eulerAngles, durationRotation).SetEase (Ease.InOutCubic));
+		seq.SetLoops (-1);
+
+		//transform.DORotate (new Vector3 (0, 0, 0), durationRotation).SetLoops(-1);
+		//seq.SetLoops (-1);
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -28,12 +33,33 @@ abstract public class ParentMovablePlatform : MonoBehaviour
 	}
 
 	protected void MovePlatform(){
-		Sequence seq = DOTween.Sequence ();
-		foreach (var item in pathMove) {
-			seq.Append(transform.DOMove(item,durationMove).SetEase (Ease.InOutCubic));
-			//seq.Append (transform.DOPath (pathMove, durationMove, PathType.Linear).SetEase (Ease.InOutCirc));
+		float sumDistantion = 0;
+		Vector3[] path = new Vector3[pathMove.transform.childCount+1];
+		float[] distantion = new float[pathMove.transform.childCount + 1];
+
+		for (int i = 0; i < pathMove.transform.childCount ; i++) {
+			if (i == pathMove.transform.childCount - 1)
+				distantion[i] = Vector3.Distance (gameObject.transform.position, pathMove.transform.GetChild (i).position);
+		 	else 
+				distantion[i] = Vector3.Distance (pathMove.transform.GetChild (i + 1).position, pathMove.transform.GetChild (i).position);
+			path [i] = pathMove.transform.GetChild (i).position;
+			sumDistantion += distantion [i];
 		}
-		//seq.AppendInterval (1.0f);
+		path [path.Length-1] = gameObject.transform.position;
+		distantion[distantion.Length-1] = Vector3.Distance (pathMove.transform.GetChild (0).position, gameObject.transform.position);
+		sumDistantion += distantion [distantion.Length - 1];
+
+		List<float> timeParts = new List<float>();
+
+		for (int i = 0; i < path.Length; i++)
+			timeParts.Add (distantion[i]/sumDistantion*durationMove);
+
+		Sequence seq = DOTween.Sequence ();
+		for (int i = 0; i < path.Length; i++) {
+			seq.Append(transform.DOMove( path[i], timeParts[i]).SetEase (Ease.InOutCubic));
+			Debug.Log (timeParts[i].ToString());
+			Debug.Log (distantion[i].ToString());
+		}
 		seq.SetLoops (-1);
 	}
 }
