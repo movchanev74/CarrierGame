@@ -15,8 +15,10 @@ public class PauseController : MonoBehaviour
 
 	PostProcessingProfile profile;
 	Sequence seq;
+	SaveManager saveManager;
 
 	void Awake(){
+		saveManager = GameObject.Find ("SaveManager").GetComponent<SaveManager> ();
 		offset = PauseButtons.GetComponent<RectTransform> ().rect.width * 5 ;
 		profile = Camera.GetComponent<PostProcessingBehaviour>().profile;
 		HidePauseButtons (0);
@@ -40,7 +42,6 @@ public class PauseController : MonoBehaviour
 		seq = DOTween.Sequence ();
 		Time.timeScale = 1;
 		for (int i = PauseButtons.transform.childCount-1; i >= 0; i--) {
-		//for (int i = 0; i < PauseButtons.transform.childCount; i++) {
 			var button = PauseButtons.transform.GetChild (i);
 			button.GetComponent<Button> ().interactable = false;
 			seq.Append (button.DOMove (button.transform.position - Vector3.right*Mathf.Abs(offset),offsetDuration));
@@ -58,15 +59,15 @@ public class PauseController : MonoBehaviour
     }
 
 	public void Save(){
-		
+		saveManager.Save ();
+	}
+
+	public void Load(){
+		saveManager.Load ();
 	}
 
 	public void Restart(){
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-	}
-
-	public void Load(){
-		
 	}
 
 	public void Exit(){

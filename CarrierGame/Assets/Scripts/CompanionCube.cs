@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CompanionCube : MonoBehaviour,IBox
+[System.Serializable]
+public class CompanionCube : SavedObject,IBox
 {
 	public void DestroyBox(){
 		Destroy (gameObject);

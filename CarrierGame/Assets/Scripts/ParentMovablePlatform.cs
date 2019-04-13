@@ -5,22 +5,10 @@ using DG.Tweening;
 
 abstract public class ParentMovablePlatform : MonoBehaviour
 {
-	protected GameObject pathMove;
-	protected float durationMove;
-	protected Vector4[] pathTimeRotation;
-	protected float durationRotation;
-
-	protected void RotatePlatform(){
-		Sequence seq = DOTween.Sequence ();
-		for (int i = 0; i < pathTimeRotation.Length; i++) {
-			seq.Append (transform.DORotate (new Vector3 (pathTimeRotation[i].x, pathTimeRotation[i].y, pathTimeRotation[i].z), pathTimeRotation[i].w).SetEase (Ease.InOutCubic));
-		}
-		seq.Append (transform.DORotate (gameObject.transform.eulerAngles, durationRotation).SetEase (Ease.InOutCubic));
-		seq.SetLoops (-1);
-
-		//transform.DORotate (new Vector3 (0, 0, 0), durationRotation).SetLoops(-1);
-		//seq.SetLoops (-1);
-	}
+	//protected GameObject pathMove;
+	//protected float durationMove;
+	//protected Vector4[] pathTimeRotation;
+	//protected float durationRotation;
 
 	void OnTriggerEnter(Collider col){
 		if(col.gameObject.tag == "Box" || col.gameObject.tag == "Player")
@@ -32,7 +20,16 @@ abstract public class ParentMovablePlatform : MonoBehaviour
 			col.gameObject.transform.SetParent(null);
 	}
 
-	protected void MovePlatform(){
+	protected void RotatePlatform(Vector4[] pathTimeRotation, float durationRotation){
+		Sequence seq = DOTween.Sequence ();
+		for (int i = 0; i < pathTimeRotation.Length; i++) {
+			seq.Append (transform.DORotate (new Vector3 (pathTimeRotation[i].x, pathTimeRotation[i].y, pathTimeRotation[i].z), pathTimeRotation[i].w).SetEase (Ease.InOutCubic));
+		}
+		seq.Append (transform.DORotate (gameObject.transform.eulerAngles, durationRotation).SetEase (Ease.InOutCubic));
+		seq.SetLoops (-1);
+	}
+
+	protected void MovePlatform(GameObject pathMove,float durationMove){
 		float sumDistantion = 0;
 		Vector3[] path = new Vector3[pathMove.transform.childCount+1];
 		float[] distantion = new float[pathMove.transform.childCount + 1];

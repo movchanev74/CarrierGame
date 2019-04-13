@@ -7,8 +7,6 @@ public class MovablePlatform : ParentMovablePlatform
 	public GameObject pathMove;
 	public float durationMove;
 	void Start(){
-		base.pathMove = pathMove;
-		base.durationMove = durationMove;
-		MovePlatform ();
+		MovePlatform (pathMove,durationMove);
 	}
 }

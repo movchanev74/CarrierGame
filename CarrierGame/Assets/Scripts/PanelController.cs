@@ -7,7 +7,7 @@ public class PanelController : MonoBehaviour
 {
 	public UnityEvent BoxTrigerEvent;
 
-	void OnCollisionEnter(Collision col){
+	void OnTriggerEnter(Collider col){
 		if (col.gameObject.tag == "Box") {
 			col.gameObject.tag = "Untagged";
 			col.gameObject.GetComponent<IBox> ().DestroyBox ();

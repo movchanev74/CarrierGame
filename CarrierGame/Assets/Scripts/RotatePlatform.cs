@@ -7,8 +7,6 @@ public class RotatePlatform : ParentMovablePlatform
 	public Vector4[] pathTimeRotation;
 	public float durationRotation;
 	void Start(){
-		base.pathTimeRotation = pathTimeRotation;
-		base.durationRotation = durationRotation;
-		RotatePlatform();
+		RotatePlatform(pathTimeRotation,durationRotation);
 	}
 }

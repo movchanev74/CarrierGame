@@ -13,13 +13,18 @@ public class LevelController : MonoBehaviour
 	public float heightGameOver;
 	public Text score;
 	int maxScore;
+
+	void Awake(){
+		maxScore = GameObject.FindGameObjectsWithTag ("Box").Length;
+		UpdateScore ();
+	}
+
     void Start()
     {
 		allScenes = SceneManager.GetAllScenes();
 		player = GameObject.Find("Player");
 
-		maxScore = GameObject.FindGameObjectsWithTag ("Box").Length;
-		UpdateScore ();
+
     }
 
 	bool checkScene (string nameScene){
@@ -54,6 +59,9 @@ public class LevelController : MonoBehaviour
 		if(player.transform.position.y < heightGameOver)
 			SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
 	}
+
+
+
 
     // Update is called once per frame
     void Update()

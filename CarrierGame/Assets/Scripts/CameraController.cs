@@ -5,19 +5,17 @@ using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
-	public  Vector3 ofset;
+	public Vector3 ofset;
 	public GameObject target;
+	public float speed;
+	public float maxDistantion; 
 	Tween moveTween;
-    // Start is called before the first frame update
-    void Start()
-    {
-		ofset = target.transform.position - transform.position ;
-    }
 
-    // Update is called once per frame
     void Update()
     {
-		//moveTween.
-		transform.DOMove(target.transform.position - ofset, 0.01f); 
+		var distantion = (transform.position - target.transform.position - ofset).magnitude;
+		if (distantion > maxDistantion)
+			transform.position = target.transform.position - ofset;
+		transform.DOMove(target.transform.position - ofset, distantion/speed); 
     }
 }
