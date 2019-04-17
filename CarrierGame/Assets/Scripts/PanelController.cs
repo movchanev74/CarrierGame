@@ -7,10 +7,12 @@ public class PanelController : MonoBehaviour
 {
 	public UnityEvent BoxTrigerEvent;
 
-	void OnTriggerEnter(Collider col){
-		if (col.gameObject.tag == "Box") {
-			col.gameObject.tag = "Untagged";
-			col.gameObject.GetComponent<IBox> ().DestroyBox ();
+	void OnTriggerStay(Collider collider)
+	{
+		if (collider.gameObject.tag == "Box" && collider.gameObject.transform.parent == null ) 
+		{
+			collider.gameObject.tag = "Untagged";
+			collider.gameObject.GetComponent<IBox> ().DestroyBox ();
 			BoxTrigerEvent.Invoke ();
 		}
 	}

@@ -9,11 +9,12 @@ public class CameraController : MonoBehaviour
 	public GameObject target;
 	public float speed;
 	public float maxDistantion; 
-	Tween moveTween;
+
+	private Tween moveTween;
 
     void Update()
     {
-		var distantion = (transform.position - target.transform.position - ofset).magnitude;
+		float distantion = (transform.position - target.transform.position - ofset).magnitude;
 		if (distantion > maxDistantion)
 			transform.position = target.transform.position - ofset;
 		transform.DOMove(target.transform.position - ofset, distantion/speed); 

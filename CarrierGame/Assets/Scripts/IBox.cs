@@ -4,7 +4,5 @@ using UnityEngine;
 
 public interface IBox 
 {
-	//Vector3 startPosition;
 	void DestroyBox ();
-	//Vector3 GetStartPosition();
 }

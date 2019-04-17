@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 4118491546036538209}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: BodyPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,7 +143,7 @@ Transform:
   - {fileID: 7593056424821138074}
   - {fileID: 7782857860287935462}
   m_Father: {fileID: 6582796493280780769}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3991122313890579341
 GameObject:
@@ -16254,7 +16254,6 @@ GameObject:
   - component: {fileID: 1004572603188114302}
   - component: {fileID: 1004572603188114304}
   - component: {fileID: 1004572603188114300}
-  - component: {fileID: 4886614694113593974}
   - component: {fileID: 4886614694113593973}
   m_Layer: 0
   m_Name: wall-e
@@ -16274,8 +16273,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.16, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
-  - {fileID: 7260065938633644743}
   - {fileID: 4118491546036538209}
+  - {fileID: 7260065938633644743}
   - {fileID: 2458296736947953939}
   - {fileID: 8170386588527650496}
   m_Father: {fileID: 0}
@@ -16295,7 +16294,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 16
   m_CollisionDetection: 0
 --- !u!65 &1004572603188114304
 BoxCollider:
@@ -16324,35 +16323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedMove: 1000
   speedRotate: 100
-  curBox: {fileID: 0}
-  boxInHands: {fileID: 0}
-  isGroundCollision: 0
-  isTakingBox: 0
   maxSpeed: 2
---- !u!111 &4886614694113593974
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6582796493281277377}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: c8fea97877550ac4e9f4d0c2d0565699, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: a7a5ba62400417d418f27160749a2d0d, type: 2}
-  - {fileID: 7400000, guid: 9afeb1537216b33438993b926ce0e002, type: 2}
-  - {fileID: 7400000, guid: 426dce95ed53c044ca687c17196324ad, type: 2}
-  - {fileID: 7400000, guid: a9e78b027e01fa04c882e7560961352d, type: 2}
-  - {fileID: 7400000, guid: ce120301f3e69c443ba04f65137b2f1a, type: 2}
-  - {fileID: 7400000, guid: 170c359e202a41c44887b6bc02e5acc6, type: 2}
-  - {fileID: 7400000, guid: c8fea97877550ac4e9f4d0c2d0565699, type: 2}
-  - {fileID: 7400000, guid: 5e7a081fb417457448812b5bd5e9aaf2, type: 2}
-  - {fileID: 7400000, guid: e21db88b690eb8443980fb9b653d5eed, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!95 &4886614694113593973
 Animator:
   serializedVersion: 3
@@ -32548,7 +32519,7 @@ Transform:
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 6582796493280780769}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8052885921163558883
 GameObject:

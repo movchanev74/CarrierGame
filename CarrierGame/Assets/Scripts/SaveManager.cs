@@ -13,14 +13,18 @@ public class SaveManager : MonoBehaviour
 	public GameObject companionBoxPrefab;
 
 	private SaveData saveData;
-	static string savePath;
-	bool loadedSave = false;
-	static SaveManager instance;
+	private static string savePath;
+	private bool loadedSave = false;
+	private static SaveManager instance;
 
-	public void Start(){
-		if (instance == null) { 
+	public void Start()
+	{
+		if (instance == null) 
+		{ 
 			instance = this; 
-		} else if(instance == this){ 
+		} 
+		else if(instance == this)
+		{ 
 			Destroy(gameObject); 
 		}
 
@@ -34,11 +38,13 @@ public class SaveManager : MonoBehaviour
 
 	public void Save()
 	{
-		var save = new SaveData ();
+		SaveData save = new SaveData ();
 		save.level = SceneManager.GetActiveScene().name;
 		save.listObjects.Add (GameObject.FindWithTag ("Player").GetComponent<Player> ().getSaveData ());
+		save.timerRestart = GameObject.FindWithTag("Level").GetComponent<LevelController>().timerRestartBox;
 
-		foreach (GameObject box in GameObject.FindGameObjectsWithTag("Box")) {
+		foreach (GameObject box in GameObject.FindGameObjectsWithTag("Box")) 
+		{
 			save.listObjects.Add (box.GetComponent<SavedObject> ().getSaveData ());
 		}
 		saveDataToDisk (save);
@@ -46,24 +52,31 @@ public class SaveManager : MonoBehaviour
 
 	public void Load()
 	{
-		if (SceneManager.GetSceneByName (loadDataFromDisk ().level) != null) {
+		if (SceneManager.GetSceneByName (loadDataFromDisk ().level) != null) 
+		{
 			loadedSave = true;
 			SceneManager.LoadScene (loadDataFromDisk ().level);
 		}
 	}
 
-	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode){
-		if(loadedSave){
+	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+	{
+		if(loadedSave)
+		{
 			loadedSave = false;
-			foreach (GameObject box in GameObject.FindGameObjectsWithTag("Box")) {
+			GameObject.FindWithTag("Level").GetComponent<LevelController>().timerRestartBox = loadDataFromDisk().timerRestart;
+
+			foreach (GameObject box in GameObject.FindGameObjectsWithTag("Box")) 
+			{
 				box.tag = "Untagged";
 				Destroy (box);
 			}
-			foreach (ObjectSaveData data in loadDataFromDisk().listObjects) {
+			foreach (ObjectSaveData data in loadDataFromDisk().listObjects) 
+			{
 				GameObject newBox = null;
 				switch (data.typeObject) {
 				case "Player":
-					GameObject.Find ("Player").GetComponent<Player> ().setSaveData (data);
+					GameObject.FindWithTag ("Player").GetComponent<Player> ().setSaveData (data);
 					break;
 				case "SciFiBox":
 					GameObject.Instantiate (sciFiBoxPrefab).GetComponent<SavedObject> ().setSaveData (data);
@@ -75,23 +88,16 @@ public class SaveManager : MonoBehaviour
 					GameObject.Instantiate (companionBoxPrefab).GetComponent<SavedObject> ().setSaveData (data);
 					break;
 				}
-				/*if (newBox) {
-					newBox.GetComponent<SavedObject> ().setSaveData (data);
-					newBox.transform.SetParent (null);
-					newBox.transform.position = new Vector3 (data.position [0], data.position [1], data.position [2]);
-					newBox.transform.rotation = new Quaternion (data.rotation[0], data.rotation[1], data.rotation[2], data.rotation[3]);
-				}*/
 			}
 			GameObject.FindWithTag ("Level").GetComponent<LevelController> ().UpdateScore ();
 		}
-
 	}
 
 	public void saveDataToDisk(SaveData saveData)
 	{
-		BinaryFormatter bf = new BinaryFormatter();
+		BinaryFormatter binaryFormatter = new BinaryFormatter();
 		FileStream file = File.Create(savePath);
-		bf.Serialize(file, saveData);
+		binaryFormatter.Serialize(file, saveData);
 		file.Close();
 	}
 		
@@ -99,9 +105,9 @@ public class SaveManager : MonoBehaviour
 	{
 		if(File.Exists(savePath))
 		{
-			BinaryFormatter bf = new BinaryFormatter();
+			BinaryFormatter binaryFormatter = new BinaryFormatter();
 			FileStream file = File.Open(savePath, FileMode.Open);
-			this.saveData = (SaveData)bf.Deserialize(file);
+			this.saveData = (SaveData)binaryFormatter.Deserialize(file);
 			file.Close();
 		}
 		return this.saveData;
@@ -112,10 +118,11 @@ public class SaveManager : MonoBehaviour
 public class SaveData
 {
 	public string level;
-	public int score;
+	public float timerRestart;
 	public List<ObjectSaveData> listObjects;
 
-	public SaveData(){
+	public SaveData()
+	{
 		listObjects = new List<ObjectSaveData> ();
 	}
 }

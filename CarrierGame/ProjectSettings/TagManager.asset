@@ -10,6 +10,8 @@ TagManager:
   - Score
   - LevelGenerator
   - GameCanvas
+  - BodyPlayer
+  - RestartTimer
   layers:
   - Default
   - TransparentFX

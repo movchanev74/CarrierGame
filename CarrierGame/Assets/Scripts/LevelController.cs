@@ -4,68 +4,96 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class LevelController : MonoBehaviour
 {
-    // Start is called before the first frame update
-	Scene[] allScenes;
-	GameObject player;
+	public static UnityEvent OnRestartBoxesEvent = new UnityEvent();
 	public float heightGameOver;
 	public Text score;
-	int maxScore;
+	public Text restartTimer;
+	public float maxTimeRestartBox;
+	public float timerRestartBox = 0;
 
-	void Awake(){
+	private int maxScore;
+
+	void Awake()
+	{
 		maxScore = GameObject.FindGameObjectsWithTag ("Box").Length;
 		UpdateScore ();
 	}
 
     void Start()
     {
-		allScenes = SceneManager.GetAllScenes();
-		player = GameObject.Find("Player");
-
-
+		if (timerRestartBox == 0) 
+			timerRestartBox = maxTimeRestartBox;
     }
 
-	bool checkScene (string nameScene){
-		for (int s = 0; s < allScenes.Length; s++) //get total number of scenes in build
-			if (allScenes [s].buildIndex != -1 && allScenes [s].name == nameScene)
+	bool checkScene (string nameScene)
+	{
+		for (int s = 0; s < SceneManager.sceneCount; s++)
+			if (SceneManager.GetSceneByBuildIndex(s).name == nameScene)
 				return true;
 		return false;
 	}
 
-	public void CheckEndGame(){
-		var boxes = GameObject.FindGameObjectsWithTag("Box");
-		if(boxes.Length == 0){
-			var currentNameScene = SceneManager.GetActiveScene ().name;
-			int numberScene = Convert.ToInt32 (currentNameScene.Substring (5)) + 1;
-			string newScene = "level" + numberScene;
+	public void BoxDestroyed()
+	{
+		CheckEndGame ();
+		UpdateScore ();
+	}
 
-			if(checkScene(newScene))
+	void CheckEndGame()
+	{
+		GameObject[] boxes = GameObject.FindGameObjectsWithTag("Box");
+		if(boxes.Length == 0)
+		{
+			string currentNameScene = SceneManager.GetActiveScene ().name;
+			int numberScene = Convert.ToInt32 (currentNameScene.Substring (5)) + 1;
+			Debug.Log (currentNameScene.Substring (5));
+			string newScene = "Level" + numberScene;
+
+			if(SceneManager.GetSceneByName(newScene).IsValid())
 				SceneManager.LoadScene(newScene);
 			else
 				SceneManager.LoadScene("MainMenu");
 		}
 	}
 
-	public void UpdateScore(){
+	public void UpdateScore()
+	{
 		if (score){
 			int newScore = maxScore - GameObject.FindGameObjectsWithTag ("Box").Length;	
 			score.text = newScore + "/" + maxScore;
 		}
 	}
 
-	void CheckGameOver(){
-		if(player.transform.position.y < heightGameOver)
-			SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+	void CheckGameOver()
+	{
+		GameObject player = GameObject.FindWithTag("Player");
+		if (player.transform.position.y < heightGameOver) 
+		{
+			var position = player.GetComponent<Player>().getSaveData ().startPosition; 
+			player.transform.rotation = new Quaternion ();
+			player.transform.position = new Vector3 (position[0], position[1], position[2]);   
+		}
 	}
 
-
-
-
-    // Update is called once per frame
+	void RestartBoxes()
+	{
+		timerRestartBox -= Time.deltaTime;
+		if(restartTimer)
+			restartTimer.text = ((int)(timerRestartBox/60)).ToString ("0")+":"+((int)(timerRestartBox%60)).ToString("00");
+		if (timerRestartBox <= 0.0f)
+		{
+			OnRestartBoxesEvent.Invoke();
+			timerRestartBox = maxTimeRestartBox;
+		}
+	}
+		
     void Update()
     {
+		RestartBoxes ();
 		CheckGameOver ();
     }
 }
